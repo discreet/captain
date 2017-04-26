@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+#
+# This pre-commit hook will execute a clean gradle build. It assumes that it
+# must run from an application directory at the root of the project. If all
+# tests pass it will exit 0.
+#
+def gradleTest()
+	scriptDir = File.expand_path(File.dirname(__FILE__))
+	Dir.chdir(scriptDir)
+
+	Dir.chdir('../../application') do
+		code = system('gradle clean build test --daemon')
+
+		if !code or nil
+			exit 1
+		end
+	end
+end
+gradleTest()

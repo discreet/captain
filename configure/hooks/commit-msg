@@ -1,0 +1,17 @@
+#!/usr/bin/env ruby
+#
+# This file is used to execute the commit-msg hooks. It calls the commit-msg
+# task in the Rakefile which is located in the hooks directory at the root of
+# the project.
+#
+def runRake()
+	scriptDir = File.expand_path(File.dirname(__FILE__))
+	message = ARGV.first
+
+	Dir.chdir(scriptDir) do
+		Dir.chdir('../../hooks') do
+			system("rake commitmsg #{message}")
+		end
+	end
+end
+runRake()

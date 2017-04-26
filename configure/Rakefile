@@ -1,0 +1,29 @@
+# This file is called by any hooks being used in the .git/hooks directory. Each
+# hook triggers the corresponding Rake task. The Rake task then will iterate
+# through the corresponding directory and execute all hook scripts.
+#
+if Dir.exists?('pre-commit')
+	task :precommit do
+		FileList['pre-commit/*'].each do |file|
+			code = system(file)
+
+			if !code or nil
+				exit 1
+			end
+		end
+	end
+end
+
+if Dir.exists?('commit-msg')
+	task :commitmsg do
+		ARGV.each { |i| task i.to_sym do ; end }
+		FileList['commit-msg/*'].each do |file|
+			cmd = "#{file} #{ARGV[1]}"
+			code = system(cmd)
+
+			if !code or nil
+				exit 1
+			end
+		end
+	end
+end
