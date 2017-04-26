@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+def promptData()
+	@properties = File.read('version')
+	incriment = @properties[/^incriment\W=\W(major$|minor$|patch$)/,1]
+
+	print "version to incriment [#{incriment}]: "
+	STDIN.reopen('/dev/tty')
+	@version = $stdin.gets.chomp
+
+	if @version.eql?("")
+		@version = incriment
+		puts 'keeping existing value'
+		exit 0
+	else
+		puts "modifying value to #{@version}"
+	end
+end
+promptData()
+
+def updateProperties()
+	newIncriment = @properties.gsub(/^incriment\W=\W(major$|minor$|patch$)/, "incriment = #{@version}")
+
+	File.open('version', 'w') { |file| file.puts newIncriment }
+end
+updateProperties()
+
+def updateGit()
+	system('git add version')
+	exit 0
+end
+updateGit()
+
