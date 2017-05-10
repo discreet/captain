@@ -49,21 +49,21 @@ Plese select the hooks you would like to configure.
 All selections should be comma separated.
 The available hooks are:
 pre-commit
+commit-msg
 Enter selection:
 ```
 
-__Script Prompt:__
+__Script Prompt for pre-commit:__
 ```
 Please select the hook scripts to configure.
 All hook scripts should be comma separated.
 The available hook scripts for pre-commit are:
 gradle
-maven
 version
 Enter selection:
 ```
 
-__Hooks Directory Structure__:
+__Hooks Directory Structure Based on pre-commit__:
 ```
 ├── hooks
 │   ├── Rakefile
@@ -75,20 +75,22 @@ __Hooks Directory Structure__:
 ## References
 
 __Configuration:__
-* [setup.rb](https://github.kdc.capitalone.com/mya561/captain/blob/master/configure/setup.rb)
-* [Rakefile](https://github.kdc.capitalone.com/mya561/captain/blob/master/configure/Rakefile)
-* [pre-commit](https://github.kdc.capitalone.com/mya561/captain/blob/master/configure/hooks/pre-commit)
+* [setup.rb](/configure/setup.rb)
+* [Rakefile](/configure/Rakefile)
+* [pre-commit](/configure/hooks/pre-commit)
+* [commit-msg](/configure/hooks/commit-msg)
 
 __Scripts:__
-* [gradle](https://github.kdc.capitalone.com/mya561/captain/blob/master/pre-commit/gradle)
-* [version](https://github.kdc.capitalone.com/mya561/captain/blob/master/pre-commit/version)
+* [gradle](/pre-commit/gradle)
+* [version](/pre-commit/version)
+* [validateCommit](/commit-msg/validateCommit)
 
 ## Limitations
 
-Captain is currently only supporting pre-commit hooks however further
-development is in the road map. It is also an OSX/Unix focused project so
-running Captain on Windows might prove challenging; there has been no testing or
-thought into how this might work.
+Captain is currently only supporting pre-commit and commit-msg hooks however
+further development is in the road map. It is also an OSX/Unix focused project
+so running Captain on Windows might prove challenging; there has been no testing
+or thought into how this might work.
 
 ## Development
 
