@@ -1,5 +1,10 @@
 #!/usr/bin/ruby
-
+#
+# this script is used to validate the format of a commit message. The format is
+# based on the best practice standards taught in the SSE Dojo and can be referenced
+# in the SSE GitHub organization GitWorkshop project. If any part of the commit
+# message does not conform you will be prompted to amend the commit.
+#
 editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
 message_file = ARGV[0]
 

@@ -1,0 +1,18 @@
+#!/usr/bin/env ruby
+#
+# This will run a clean maven test. It is configured to run from the root of the
+# project. If all tests pass it will exit 0.
+#
+def mavenTest()
+	scriptDir = File.expand_path(File.dirname(__FILE__))
+	Dir.chdir(scriptDir)
+
+	Dir.chdir('../../') do
+		system('mvn clean test')
+		if $?.exitstatus == 0
+			File.open('/tmp/hookStatus', 'a') { |f| f.write("maven: success\n") }
+		end
+		exit $?.exitstatus
+	end
+end
+mavenTest()

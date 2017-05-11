@@ -11,6 +11,7 @@ def runRake()
 	Dir.chdir(scriptDir) do
 		Dir.chdir('../../hooks') do
 			system("rake commitmsg #{message}")
+			exit $?.exitstatus
 		end
 	end
 end

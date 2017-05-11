@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+#
+# This script will append the exit status of all other hooks to the approved
+# commit message.
+#
+require 'digest'
+
+def prepCommit()
+	messageFile= ARGV[0]
+	originalMessage = File.read("../#{messageFile}")
+	hookStatus = File.read('/tmp/hookStatus')
+	shuffled_string = 'Captain'.split("").shuffle.join
+	hashID = Digest::SHA1.hexdigest shuffled_string
+	hookStatus = "\n#{hookStatus}\nSigned off by Captain\nApproval ID: #{hashID}\n"
+	commentMatch = originalMessage.match(/((^\#.*$\n){3})/)
+
+	if commentMatch
+		resultPosition = commentMatch.offset(0)[0]
+	else
+		resultPosition = orignalMessage.length -1
+	end
+
+	hookStatus = "\n#{hookStatus}" if ARGV[1] == 'message'
+	originalMessage.insert(resultPosition, hookStatus)
+	File.open("../#{messageFile}", 'w') { |f| f.write originalMessage }
+	File.delete('/tmp/hookStatus')
+end
+prepCommit()

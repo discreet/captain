@@ -5,10 +5,11 @@
 if Dir.exists?('pre-commit')
 	task :precommit do
 		FileList['pre-commit/*'].each do |file|
-			code = system(file)
-
-			if !code or nil
-				exit 1
+			system(file)
+			if $?.exitstatus == 0
+				next
+			else
+				exit $?.exitstatus
 			end
 		end
 	end
@@ -19,10 +20,26 @@ if Dir.exists?('commit-msg')
 		ARGV.each { |i| task i.to_sym do ; end }
 		FileList['commit-msg/*'].each do |file|
 			cmd = "#{file} #{ARGV[1]}"
-			code = system(cmd)
+			system(cmd)
+			if $?.exitstatus == 0
+				next
+			else
+				exit $?.exitstatus
+			end
+		end
+	end
+end
 
-			if !code or nil
-				exit 1
+if Dir.exists?('prepare-commit-msg')
+	task :preparecommitmsg do
+		ARGV.each { |i| task i.to_sym do ; end }
+		FileList['prepare-commit-msg/*'].each do |file|
+			cmd = "#{file} #{ARGV[1]}"
+			system(cmd)
+			if $?.exitstatus == 0
+				next
+			else
+				exit $?.exitstatus
 			end
 		end
 	end

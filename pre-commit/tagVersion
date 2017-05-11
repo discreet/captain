@@ -6,6 +6,8 @@
 # the value has been changed.
 #
 def promptData()
+	scriptDir = File.expand_path(File.dirname(__FILE__))
+	Dir.chdir(scriptDir)
 	@properties = File.read('../../pipeline.properties')
 	increment = @properties[/(major$|minor$|patch$)/]
 
@@ -16,10 +18,8 @@ def promptData()
 
 	if @version.eql?("")
 		@version = increment
-		puts 'keeping existing value'
+		File.open('/tmp/hookStatus', 'a') { |f| f.write("tagVersion: keeping existing value\n") }
 		exit 0
-	else
-		puts "modifying value to #{@version}"
 	end
 end
 promptData()
@@ -28,6 +28,7 @@ def updateProperties()
 	newIncrement = @properties.gsub(/(major$|minor$|patch$)/, @version)
 
 	File.open('../../pipeline.properties', 'w') { |file| file.puts newIncrement }
+	File.open('/tmp/hookStatus', 'a') { |f| f.write("tagVersion: changing to #{@version}\n") }
 end
 updateProperties()
 

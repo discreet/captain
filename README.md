@@ -2,9 +2,12 @@
 
 #### Table of Contents
 
+<img align="right" src="https://github.kdc.capitalone.com/mya561/captain/blob/master/images/captainhook.png" alt="Captain Hook...from Peter Pan" />
+
 1. [Description](#description)
 1. [Setup](#setup)
     * [What Captain affects](#what-scollector-affects)
+    * [Installation](#installation)
     * [Setup requirements](#setup-requirements)
     * [Usage](#setup-usage)
 1. [References](#references)
@@ -27,6 +30,17 @@ the project. Captain will create `pre-commit`, `post-commit`, etc files in the
 created at the root of the project Captain will manage a `Rakefile` and a
 directory structure for the selected hook scripts.
 
+### Installation
+
+Captain is really nothing more than a file structure and some fancy pants
+scripts. Installation is fairly easy. Download the latest stable release tarball
+from GitHub. Untar the package into the project root.
+
+The below command will create a `captain` directory in the project root and
+untar the downloaded Captain tarball to that directory path.  
+`mkdir <path to project root>/captain && tar -C <path to project root/captain>
+-xvf <captain tarball> --strip-components 1`
+
 ### Setup Requirements
 
 Captain is mostly a Ruby app, however hooks can be written in any language the
@@ -39,9 +53,10 @@ for Captain to function; `gem install rake`.
 ### Usage
 
 Once Captain is cloned into the root of the project and the Rake gem is
-installed run the `setup.rb` file in the `configure` directory to begin setup.
+installed run the `setup` file in the `configure` directory to begin setup.
+Remember to add the `captain` and `hooks` directory to the `.gitignore` file.
 
-setup.rb prompts:
+Setup prompts:
 
 __Hook Prompt:__
 ```
@@ -59,7 +74,9 @@ Please select the hook scripts to configure.
 All hook scripts should be comma separated.
 The available hook scripts for pre-commit are:
 gradle
-version
+maven
+validateCFT
+tagVersion
 Enter selection:
 ```
 
@@ -69,21 +86,25 @@ __Hooks Directory Structure Based on pre-commit__:
 │   ├── Rakefile
 │   └── pre-commit
 │       ├── gradle
-│       └── version
+│       └── tagVersion
 ```
 
 ## References
 
 __Configuration:__
-* [setup.rb](/configure/setup.rb)
+* [setup](/configure/setup)
 * [Rakefile](/configure/Rakefile)
 * [pre-commit](/configure/hooks/pre-commit)
 * [commit-msg](/configure/hooks/commit-msg)
+* [prepare-commit-msg](/configure/hooks/prepare-commit-msg)
 
 __Scripts:__
 * [gradle](/pre-commit/gradle)
-* [version](/pre-commit/version)
+* [maven](/pre-commit/maven)
+* [validateCFT](/pre-commit/validateCFT)
+* [tagVersion](/pre-commit/tagVersion)
 * [validateCommit](/commit-msg/validateCommit)
+* [hookStatus](/prepare-commit-msg/hookStatus)
 
 ## Limitations
 
