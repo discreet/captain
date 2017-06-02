@@ -5,28 +5,32 @@
 # are no changes the script exits 0. If changes are detected the tests are
 # executed. If all tests pass it will exit 0.
 #
-def gradleTest()
-	scriptDir = File.expand_path(File.dirname(__FILE__))
-	Dir.chdir(scriptDir)
+require 'Engish'
 
-	print 'specify directory to run gradle: '
-	STDIN.reopen('/dev/tty')
-	appDir = $stdin.gets.chomp
+def getInput
+  scriptDir = File.expand_path(File.dirname(__FILE__))
+  Dir.chdir(scriptDir)
 
-	Dir.chdir('../../') do
-		appChange = system("git diff --staged --name-only | grep #{appDir}/")
-		if appChange
-			Dir.chdir(appDir) do
-				system('gradle clean build test --daemon')
-			end
-			if $?.exitstatus == 0
-				File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: success\n") }
-			end
-			exit $?.exitstatus
-		else
-			File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: no changes\n") }
-			exit 0
-		end
-	end
+  print 'specify directory to run gradle: '
+  STDIN.reopen('/dev/tty')
+  @appDir = $stdin.gets.chomp
 end
-gradleTest()
+getInput
+
+def gradleTest
+  Dir.chdir('../../') do
+    if system("git diff --staged --name-only | grep #{@appDir}/")
+      Dir.chdir(@appDir) do
+        system('gradle clean build test --daemon')
+      end
+      if $CHILD_STATUS.exitstatus.zero?
+        File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: success\n") }
+      end
+      exit $CHILD_STATUS.exitstatus
+    else
+      File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: no changes\n") }
+      exit 0
+    end
+  end
+end
+gradleTest

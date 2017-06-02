@@ -5,38 +5,39 @@
 # user input. The pipeline.properties file will then be added to the commit if
 # the value has been changed.
 #
-def promptData()
-	scriptDir = File.expand_path(File.dirname(__FILE__))
-	Dir.chdir(scriptDir)
-	@properties = File.read('../../pipeline.properties')
-	increment = @properties[/(major$|minor$|patch$)/]
+def promptData
+  scriptDir = File.expand_path(File.dirname(__FILE__))
+  Dir.chdir(scriptDir)
+  @properties = File.read('../../pipeline.properties')
+  increment = @properties[/(major$|minor$|patch$)/]
 
-	puts 'acceptable increment values: [major, minor, patch]'
-	print "version to increment [#{increment}]: "
-	STDIN.reopen('/dev/tty')
-	@version = $stdin.gets.chomp
+  puts 'acceptable increment values: [major, minor, patch]'
+  print "version to increment [#{increment}]: "
+  STDIN.reopen('/dev/tty')
+  @version = $stdin.gets.chomp
 
-	if @version.eql?("")
-		@version = increment
-		File.open('/tmp/hookStatus', 'a') { |f| f.write("tagVersion: keeping existing value\n") }
-		exit 0
-	end
+  if @version.eql?('')
+    @version = increment
+    File.open('/tmp/hookStatus', 'a')\
+      { |f| f.write("tagVersion: keeping existing value\n") }
+    exit 0
+  end
 end
-promptData()
+promptData
 
-def updateProperties()
-	newIncrement = @properties.gsub(/(major$|minor$|patch$)/, @version)
+def updateProperties
+  newIncrement = @properties.gsub(/(major$|minor$|patch$)/, @version)
 
-	File.open('../../pipeline.properties', 'w') { |file| file.puts newIncrement }
-	File.open('/tmp/hookStatus', 'a') { |f| f.write("tagVersion: changing to #{@version}\n") }
+  File.open('../../pipeline.properties', 'w') { |file| file.puts newIncrement }
+  File.open('/tmp/hookStatus', 'a')\
+    { |f| f.write("tagVersion: changing to #{@version}\n") }
 end
-updateProperties()
+updateProperties
 
-def updateGit()
-	Dir.chdir('../..') do
-		system('git add pipeline.properties')
-		exit 0
-	end
+def updateGit
+  Dir.chdir('../..') do
+    system('git add pipeline.properties')
+    exit 0
+  end
 end
-updateGit()
-
+updateGit

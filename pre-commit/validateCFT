@@ -1,40 +1,49 @@
 #!/usr/bin/env ruby
 #
-# This script takes an input for the directory to validate CFTs in. This directory
-# is relative to the root of the project. If changes are detected it will
-# execture the aws cli command for validating CFTs. If all validation passes it
-# will exit 0. If no changes are detected it will exit 0
+# This script takes an input for the directory to validate CFTs in. This
+# directory is relative to the root of the project. If changes are detected it
+# will execture the aws cli command for validating CFTs. If all validation
+# passes it will exit 0. If no changes are detected it will exit 0
 #
-def validateCFT()
-	scriptDir = File.expand_path(File.dirname(__FILE__))
-	Dir.chdir(scriptDir)
+def getInput
+  scriptDir = File.expand_path(File.dirname(__FILE__))
+  Dir.chdir(scriptDir)
 
-	print 'specify directory for CFT validation: '
-	STDIN.reopen('/dev/tty')
-	cftDir = $stdin.gets.chomp
-
-	Dir.chdir('../../') do
-		infrChange = system("git diff --staged --name-only | grep #{cftDir}")
-		if infrChange
-			print 'specify the profile for authentication: '
-			STDIN.reopen('/dev/tty')
-			profile = $stdin.gets.chomp
-
-			Dir.chdir(cftDir) do
-				files = Dir.entries('.').select { |f| !File.directory? f }.select { |i| i =~ /\.json|\.yaml|\.yml/ }
-				files.each do |file|
-					system("aws --profile #{profile} cloudformation validate-template --template-body file://#{file}")
-					break if $?.exitstatus != 0
-				end
-			end
-			if $?.exitstatus == 0
-				File.open('/tmp/hookStatus', 'a') { |f| f.write("validateCFT: success\n") }
-			end
-			exit $?.exitstatus
-		else
-			File.open('/tmp/hookStatus', 'a') { |f| f.write("validateCFT: no changes\n") }
-			exit 0
-		end
-	end
+  print 'specify directory for CFT validation: '
+  STDIN.reopen('/dev/tty')
+  @cftDir = $stdin.gets.chomp
 end
-validateCFT()
+
+def getAWSCreds
+  Dir.chdir('../../') do
+    infrChange = system("git diff --staged --name-only | grep #{@cftDir}")
+    if infrChange
+      print 'specify the profile for authentication: '
+      STDIN.reopen('/dev/tty')
+      @profile = $stdin.gets.chomp
+      validateCFT
+    else
+      File.open('/tmp/hookStatus', 'a') do |f|
+        f.write("validateCFT: no changes\n")
+      end
+      exit 0
+    end
+  end
+end
+getAWSCreds
+
+def validateCFT
+  Dir.chdir(@cftDir) do
+    files = Dir.entries('.').select { |f| !File.directory? f }\
+               .select { |i| i =~ /\.json|\.yaml|\.yml/ }
+    files.each do |file|
+      system("aws --profile #{@profile} cloudformation validate-template \
+      --template-body file://#{file}")
+      break if $CHILD_STATUS.exitstatus != 0
+    end
+  end
+  if $CHILD_STATUS.exitstatus.zero?
+    File.open('/tmp/hookStatus', 'a') { |f| f.write("validateCFT: success\n") }
+  end
+  exit $CHILD_STATUS.exitstatus
+end
