@@ -9,17 +9,39 @@ editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
 message_file = ARGV[0]
 
 def check_format_rules(line_number, line)
-  real_line_number = line_number + 1
-  return "Error #{real_line_number}: First line should be less than 50 \
-  characters in length." if line_number.zero? && line.length > 50
-  return "Error #{real_line_number}: Second line should be empty." \
-  if line_number == 1 && !line.empty?
-  (return "Error #{real_line_number}: No line should be over 72 characters \
-  long." if line.length > 72) unless line[0, 1] == '#'
+  @real_line_number = line_number + 1
+  @line_number = line_number
+  @line = line
+
+  check_title_line
+  check_blank_line
+  check_line_chars
+end
+
+def check_title_line
+  if @line_number.zero? && @line.length > 50
+    return "Error #{@real_line_number}: First line should be less than 50 \
+    characters in length."
+  end
   false
 end
 
-while true
+def check_blank_line
+  if @line_number == 1 && !@line.empty?
+    return "Error #{@real_line_number}: Second line should be empty."
+  end
+  false
+end
+
+def check_line_chars
+  if @line.length > 72 && @line[0, 1] != '#'
+    return "Error #{@real_line_number}: No line should be over 72 characters \
+    long."
+  end
+  false
+end
+
+loop do
   commit_msg = []
   errors = []
 

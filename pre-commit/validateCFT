@@ -14,36 +14,43 @@ def getInput
   @cftDir = $stdin.gets.chomp
 end
 
-def getAWSCreds
+def checkChanges
   Dir.chdir('../../') do
-    infrChange = system("git diff --staged --name-only | grep #{@cftDir}")
-    if infrChange
-      print 'specify the profile for authentication: '
-      STDIN.reopen('/dev/tty')
-      @profile = $stdin.gets.chomp
-      validateCFT
+    if system("git diff --staged --name-only | grep #{@cftDir}")
+      getAWSCreds
     else
-      File.open('/tmp/hookStatus', 'a') do |f|
-        f.write("validateCFT: no changes\n")
-      end
+      File.open('/tmp/hookStatus', 'a') \
+      { |f| f.write("validateCFT: no changes\n") }
       exit 0
     end
   end
 end
+checkChanges
+
+def getAWSCreds
+  print 'specify the profile for authentication: '
+  STDIN.reopen('/dev/tty')
+  @profile = $stdin.gets.chomp
+end
 getAWSCreds
 
-def validateCFT
+def getCFT
   Dir.chdir(@cftDir) do
-    files = Dir.entries('.').select { |f| !File.directory? f }\
-               .select { |i| i =~ /\.json|\.yaml|\.yml/ }
-    files.each do |file|
-      system("aws --profile #{@profile} cloudformation validate-template \
-      --template-body file://#{file}")
-      break if $CHILD_STATUS.exitstatus != 0
-    end
+    @files = Dir.entries('.').select { |f| !File.directory? f }\
+                .select { |i| i =~ /\.json|\.yaml|\.yml/ }
+  end
+end
+getCFT
+
+def validateCFT
+  @files.each do |file|
+    system("aws --profile #{@profile} cloudformation validate-template \
+    --template-body file://#{file}")
+    break if $CHILD_STATUS.exitstatus != 0
   end
   if $CHILD_STATUS.exitstatus.zero?
     File.open('/tmp/hookStatus', 'a') { |f| f.write("validateCFT: success\n") }
   end
   exit $CHILD_STATUS.exitstatus
 end
+validateCFT

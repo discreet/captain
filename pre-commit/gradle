@@ -17,20 +17,27 @@ def getInput
 end
 getInput
 
-def gradleTest
+def checkChanges
   Dir.chdir('../../') do
     if system("git diff --staged --name-only | grep #{@appDir}/")
-      Dir.chdir(@appDir) do
-        system('gradle clean build test --daemon')
-      end
-      if $CHILD_STATUS.exitstatus.zero?
-        File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: success\n") }
-      end
-      exit $CHILD_STATUS.exitstatus
+      gradleTest
     else
       File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: no changes\n") }
       exit 0
     end
+  end
+end
+checkChanges
+
+def gradleTest
+  Dir.chdir('../../') do
+    Dir.chdir(@appDir) do
+      system('gradle clean build test --daemon')
+    end
+    if $CHILD_STATUS.exitstatus.zero?
+      File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: success\n") }
+    end
+    exit $CHILD_STATUS.exitstatus
   end
 end
 gradleTest

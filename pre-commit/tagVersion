@@ -5,25 +5,34 @@
 # user input. The pipeline.properties file will then be added to the commit if
 # the value has been changed.
 #
-def promptData
-  scriptDir = File.expand_path(File.dirname(__FILE__))
-  Dir.chdir(scriptDir)
-  @properties = File.read('../../pipeline.properties')
-  increment = @properties[/(major$|minor$|patch$)/]
+@scriptDir = File.expand_path(File.dirname(__FILE__))
 
+def getIncrement
+  Dir.chdir(@scriptDir)
+  @properties = File.read('../../pipeline.properties')
+  @increment = @properties[/(major$|minor$|patch$)/]
+end
+getIncrement
+
+def newIncrement
   puts 'acceptable increment values: [major, minor, patch]'
-  print "version to increment [#{increment}]: "
+  print "version to increment [#{@increment}]: "
   STDIN.reopen('/dev/tty')
   @version = $stdin.gets.chomp
+end
+newIncrement
 
-  if @version.eql?('')
-    @version = increment
+def validateIncrement
+  @version = @increment if @version.eql?('')
+  if @version == @increment
     File.open('/tmp/hookStatus', 'a')\
       { |f| f.write("tagVersion: keeping existing value\n") }
     exit 0
+  else
+    updateProperties
   end
 end
-promptData
+validateIncrement
 
 def updateProperties
   newIncrement = @properties.gsub(/(major$|minor$|patch$)/, @version)
@@ -32,7 +41,6 @@ def updateProperties
   File.open('/tmp/hookStatus', 'a')\
     { |f| f.write("tagVersion: changing to #{@version}\n") }
 end
-updateProperties
 
 def updateGit
   Dir.chdir('../..') do
