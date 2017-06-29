@@ -1,7 +1,5 @@
 #!groovy
  
-agent any
-
 stages {
   stage('Checkout') {
       deleteDir()
