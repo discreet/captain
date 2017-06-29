@@ -1,12 +1,12 @@
 #!groovy
- 
-stages {
+
+node() {
   stage('Checkout') {
-      deleteDir()
-      checkout scm
+    deleteDir()
+    checkout scm
   }
 
-stage('rubocop') {
+  stage('rubocop') {
     sh'''
       rubocop
     '''
