@@ -1,16 +1,16 @@
-pipeline {
-  agent any
+#!groovy
+ 
+agent any
 
-  stages {
-    stage('Checkout') {
-        deleteDir()
-        checkout scm
-    }
+stages {
+  stage('Checkout') {
+      deleteDir()
+      checkout scm
+  }
 
-  stage('rubocop') {
-      sh'''
-        rubocop
-      '''
-    }
+stage('rubocop') {
+    sh'''
+      rubocop
+    '''
   }
 }
