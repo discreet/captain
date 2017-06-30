@@ -82,7 +82,7 @@ def copyFiles
   Dir.chdir(@scriptDir) do
     FileUtils.cp('Rakefile', '../../hooks')
 
-    @chosen.each do |k, _|
+    @chosen.each do |k, v|
       FileUtils.cp("hooks/#{k}", '../../.git/hooks')
 
       v.each do |script|
