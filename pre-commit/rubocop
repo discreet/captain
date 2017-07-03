@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+#
+# This pre-commit hook will execute a clean gradle build. An input is taken for
+# the directory to run gradle in. It is then checked for any changes. If there
+# are no changes the script exits 0. If changes are detected the tests are
+# executed. If all tests pass it will exit 0.
+#
+require 'Engish'
+
+def getInput
+  scriptDir = File.expand_path(File.dirname(__FILE__))
+  Dir.chdir(scriptDir)
+
+  print 'specify directory to run rubocop: '
+  STDIN.reopen('/dev/tty')
+  @appDir = $stdin.gets.chomp
+end
+getInput
+
+def checkChanges
+  Dir.chdir('../../') do
+    if system("git diff --staged --name-only | grep #{@appDir}/")
+      gradleTest
+    else
+      File.open('/tmp/hookStatus', 'a') { |f| f.write("rubocop: no changes\n") }
+      exit 0
+    end
+  end
+end
+checkChanges
+
+def rubocopTest
+  Dir.chdir('../../') do
+    Dir.chdir(@appDir) do
+      system('rubocop')
+    end
+    if $CHILD_STATUS.exitstatus.zero?
+      File.open('/tmp/hookStatus', 'a') { |f| f.write("rubocop: success\n") }
+    end
+    exit $CHILD_STATUS.exitstatus
+  end
+end
+rubocopTest

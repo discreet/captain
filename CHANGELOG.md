@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## Unreleased
+### Added
+- Rubocop pre-commit hook
+- Refactored hooks to meet Rubocop standards
+- .rubocop file
+- Jenkinsfile for CI builds
+
 ## [v1.0.0-RC2] - 2017-05-17
 ### Added
 - prepare-commit-msg hook to read in hook statuses

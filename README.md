@@ -105,6 +105,7 @@ __Scripts:__
 * [tagVersion](/pre-commit/tagVersion)
 * [validateCommit](/commit-msg/validateCommit)
 * [hookStatus](/prepare-commit-msg/hookStatus)
+* [rubocop](/pre-commit/rubocop)
 
 ## Limitations
 
