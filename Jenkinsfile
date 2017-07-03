@@ -7,14 +7,12 @@ node() {
   }
 
   stage('Pull Docker Image') {
-    def dockyardUrl = 'https://dockyard.cloud.capitalone.com'
-    def imageID = 'sse-poto/chris-reqs'
-    def imageFdn = dockyardUrl + "/" + imageId
 
-    docker.withRegistry(dockyardUrl, 'mya561') {
-      def dockerImage = docker.image(imageID)
+    docker.withRegistry('https://dockyard.cloud.capitalone.com', 'mya561') {
+      def imageFqdn = 'https://dockyard.cloud.capitalone.com/sse-poto/chris-reqs'
+      def dockerImage = docker.image('sse-poto/chris-reqs')
       dockerImage.pull()
-      docker.script.sh(script: "docker run -d --name chris-reqs $imageFdn tail -f /dev/null", returnStdout: true).trim()
+      docker.script.sh(script: "docker run -d --name chris-reqs $imageFqdn tail -f /dev/null", returnStdout: true).trim()
     }
   }
 
