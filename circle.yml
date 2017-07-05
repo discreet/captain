@@ -4,8 +4,9 @@ machine:
 
 dependencies:
   override:
-    - 'rvm-exec ruby-2.2.4 bundle install'
-    - 'rvm-exec ruby-2.3.1 bundle install'
+    # no Rake or Gemfile yet
+    - #'rvm-exec ruby-2.2.4 bundle install'
+    - #'rvm-exec ruby-2.3.1 bundle install'
 
 test:
   override:
