@@ -12,7 +12,7 @@ require 'fileutils'
 
 def getHooks
   Dir.chdir(@scriptDir) do
-    hooks = Dir.entries('hooks').select { |f| !File.directory? f }
+    hooks = Dir.entries('hooks').reject { |f| File.directory? f }
 
     @hooks = if hooks.count > 1
                hooks.join(',')
@@ -44,7 +44,7 @@ def getScripts
       hookScripts = hookScripts.gsub(/^\"|\"?$/, '')
       hooksDir = "../#{hookScripts}"
       @scriptsHash[hookScripts] = Dir.entries(hooksDir)\
-                                     .select { |f| !File.directory? f }
+                                     .reject { |f| File.directory? f }
     end
   end
 end

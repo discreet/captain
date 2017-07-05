@@ -36,7 +36,7 @@ getAWSCreds
 
 def getCFT
   Dir.chdir(@cftDir) do
-    @files = Dir.entries('.').select { |f| !File.directory? f }\
+    @files = Dir.entries('.').reject { |f| File.directory? f }\
                 .select { |i| i =~ /\.json|\.yaml|\.yml/ }
   end
 end
