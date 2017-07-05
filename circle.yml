@@ -1,0 +1,16 @@
+machine:
+  ruby:
+    version: ruby-2.2.4
+
+dependencies:
+  override:
+    - 'rvm-exec ruby-2.2.4 bundle install'
+    - 'rvm-exec ruby-2.3.1 bundle install'
+
+test:
+  override:
+    # no spec tests are written yet
+    #- 'rvm-exec ruby-2.2.4 bundle exec rake'
+    #- 'rvm-exec ruby-2.3.1 bundle exec rake'
+  post:
+    - 'bundle exec rubocop'
