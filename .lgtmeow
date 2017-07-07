@@ -24,7 +24,7 @@ comment:
       }
       {
         target: slack
-        names: ["sse-phantom-dev"]
+        names: ["#sse-phantom-dev"]
         url: "cardtech-capitalone.slack.com"
       }
     ]
