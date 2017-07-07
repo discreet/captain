@@ -1,10 +1,6 @@
 approvals:
   [
     {
-      scope:
-      {
-        branches: ["master"]
-      }
       name: "polka lgtmeow"
       match: "all[count=1,self=true]"
       merge:
