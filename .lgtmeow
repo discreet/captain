@@ -25,9 +25,8 @@ comment:
         target: github
       }
       {
-        target: slack
+        target: "cardtech-capitalone.slack.com"
         names: ["#sse-phantom-dev"]
-        url: "cardtech-capitalone.slack.com"
       }
     ]
   }
