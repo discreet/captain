@@ -17,15 +17,18 @@ maintainers:
   }
 comment:
   {
-    target: github
-    pattern: null
-    types: []
+    enable: true
+    targets: [
+      {
+        target: github
+      }
+    ]
   }
-comment:
-  {
-    target: slack
-    pattern: null
-    types: []
-    names: ["sse-phantom-dev"]
-    url: "cardtech-capitalone.slack.com"
-  }
+#comment:
+#  {
+#    target: slack
+#    pattern: null
+#    types: []
+#    names: ["sse-phantom-dev"]
+#    url: "cardtech-capitalone.slack.com"
+#  }
