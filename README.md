@@ -1,4 +1,4 @@
-[![CircleCI](https://circle-poc.cloud.capitalone.com/gh/phantomoftheops/captain.svg?style=svg&circle-token=73a085435d172923367cdacddc52c23d9a8e5daf)](https://circle-poc.cloud.capitalone.com/gh/phantomoftheops/captain)
+[![CircleCI](https://circle-poc.cloud.capitalone.com/gh/phantomoftheops/captain.svg?style=shield&circle-token=73a085435d172923367cdacddc52c23d9a8e5daf)](https://circle-poc.cloud.capitalone.com/gh/phantomoftheops/captain)
 
 # Captain
 
