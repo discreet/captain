@@ -1,7 +1,7 @@
 approvals:
   [
     {
-      name: "polka lgtmeow"
+      name: "captain lgtmeow"
       match: "all[count=1,self=true]"
       merge:
       {
@@ -20,4 +20,12 @@ comment:
     target: github
     pattern: null
     types: []
+  }
+comment:
+  {
+    target: slack
+    pattern: null
+    types: []
+    names: ["sse-phantom-dev"]
+    url: "cardtech-capitalone.slack.com"
   }
