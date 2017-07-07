@@ -5,26 +5,24 @@
 # are no changes the script exits 0. If changes are detected the tests are
 # executed. If all tests pass it will exit 0.
 #
-require 'Engish'
+require 'English'
+require_relative '../lib/input'
+require_relative '../lib/changes'
+require_relative '../lib/success'
+
+@test = 'gradle'
 
 def getInput
   scriptDir = File.expand_path(File.dirname(__FILE__))
   Dir.chdir(scriptDir)
 
-  print 'specify directory to run gradle: '
-  STDIN.reopen('/dev/tty')
-  @appDir = $stdin.gets.chomp
+  @appDir = Input.getDir(@test)
 end
 getInput
 
 def checkChanges
   Dir.chdir('../../') do
-    if system("git diff --staged --name-only | grep #{@appDir}/")
-      gradleTest
-    else
-      File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: no changes\n") }
-      exit 0
-    end
+    gradleTest if Changes.findChanges(@appDir, @test)
   end
 end
 checkChanges
@@ -34,10 +32,7 @@ def gradleTest
     Dir.chdir(@appDir) do
       system('gradle clean build test --daemon')
     end
-    if $CHILD_STATUS.exitstatus.zero?
-      File.open('/tmp/hookStatus', 'a') { |f| f.write("gradle: success\n") }
-    end
+    Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
     exit $CHILD_STATUS.exitstatus
   end
 end
-gradleTest

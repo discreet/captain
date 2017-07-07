@@ -4,6 +4,7 @@
 # project. If all tests pass it will exit 0.
 #
 require 'English'
+require_relative '../success'
 
 def mavenTest
   scriptDir = File.expand_path(File.dirname(__FILE__))
@@ -11,9 +12,7 @@ def mavenTest
 
   Dir.chdir('../../') do
     system('mvn clean test')
-    if $CHILD_STATUS.exitstatus.zero?
-      File.open('/tmp/hookStatus', 'a') { |f| f.write("maven: success\n") }
-    end
+    Success.success('maven') if $CHILD_STATUS.exitstatus.zero?
     exit $CHILD_STATUS.exitstatus
   end
 end

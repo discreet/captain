@@ -5,24 +5,23 @@
 # will execture the aws cli command for validating CFTs. If all validation
 # passes it will exit 0. If no changes are detected it will exit 0
 #
+require 'English'
+require_relative '../lib/input'
+require_relative '../lib/changes'
+require_relative '../lib/success'
+
+@test = 'CFT validation'
+
 def getInput
   scriptDir = File.expand_path(File.dirname(__FILE__))
   Dir.chdir(scriptDir)
 
-  print 'specify directory for CFT validation: '
-  STDIN.reopen('/dev/tty')
-  @cftDir = $stdin.gets.chomp
+  @appDir = Input.getDir(@test)
 end
 
 def checkChanges
   Dir.chdir('../../') do
-    if system("git diff --staged --name-only | grep #{@cftDir}")
-      getAWSCreds
-    else
-      File.open('/tmp/hookStatus', 'a') \
-      { |f| f.write("validateCFT: no changes\n") }
-      exit 0
-    end
+    getAWSCreds if Changes.findChanges(@appDir, @test)
   end
 end
 checkChanges
@@ -32,7 +31,6 @@ def getAWSCreds
   STDIN.reopen('/dev/tty')
   @profile = $stdin.gets.chomp
 end
-getAWSCreds
 
 def getCFT
   Dir.chdir(@cftDir) do
@@ -48,9 +46,7 @@ def validateCFT
     --template-body file://#{file}")
     break if $CHILD_STATUS.exitstatus != 0
   end
-  if $CHILD_STATUS.exitstatus.zero?
-    File.open('/tmp/hookStatus', 'a') { |f| f.write("validateCFT: success\n") }
-  end
+  Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
   exit $CHILD_STATUS.exitstatus
 end
 validateCFT
