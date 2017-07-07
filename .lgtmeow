@@ -3,6 +3,8 @@ approvals:
     {
       name: "captain lgtmeow"
       match: "all[count=1,self=true]"
+      pattern: "(?i)^shipit"
+      antipattern: "(?i)^holdit"
       merge:
       {
         enable: true
