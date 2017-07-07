@@ -21,11 +21,3 @@ comment:
     pattern: null
     types: []
   }
-comment:
-  {
-    target: slack
-    pattern: null
-    types: []
-    names: ["sse-phantom-dev"]
-    url: "cardtech.capitalone.slack.com"
-  }
