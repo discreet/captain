@@ -9,37 +9,23 @@
 
 def getIncrement
   Dir.chdir(@scriptDir)
-  @properties = File.read('../../pipeline.properties')
-  @increment = @properties[/(major$|minor$|patch$)/]
+  Increment.get('../../pipeline.properties')
 end
 getIncrement
 
 def newIncrement
   puts 'acceptable increment values: [major, minor, patch]'
-  print "version to increment [#{@increment}]: "
-  STDIN.reopen('/dev/tty')
-  @version = $stdin.gets.chomp
+  Increment.new
 end
 newIncrement
 
 def validateIncrement
-  @version = @increment if @version.eql?('')
-  if @version == @increment
-    File.open('/tmp/hookStatus', 'a')\
-      { |f| f.write("tagVersion: keeping existing value\n") }
-    exit 0
-  else
-    updateProperties
-  end
+  updateProperties unless Increment.validate
 end
 validateIncrement
 
 def updateProperties
-  newIncrement = @properties.gsub(/(major$|minor$|patch$)/, @version)
-
-  File.open('../../pipeline.properties', 'w') { |file| file.puts newIncrement }
-  File.open('/tmp/hookStatus', 'a')\
-    { |f| f.write("tagVersion: changing to #{@version}\n") }
+  Increment.change('../../pipeline.properties')
 end
 
 def updateGit
