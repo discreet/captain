@@ -9,6 +9,7 @@ require 'Engish'
 require_relative '../lib/input'
 require_relative '../lib/changes'
 require_relative '../lib/success'
+require_relative '../lib/test'
 
 @test = 'rubocop'
 
@@ -30,7 +31,7 @@ checkChanges
 def rubocopTest
   Dir.chdir('../../') do
     Dir.chdir(@appDir) do
-      system('rubocop')
+      Test.rubocop
     end
     Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
     exit $CHILD_STATUS.exitstatus

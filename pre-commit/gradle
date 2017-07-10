@@ -9,6 +9,7 @@ require 'English'
 require_relative '../lib/input'
 require_relative '../lib/changes'
 require_relative '../lib/success'
+require_relative '../lib/test'
 
 @test = 'gradle'
 
@@ -30,7 +31,7 @@ checkChanges
 def gradleTest
   Dir.chdir('../../') do
     Dir.chdir(@appDir) do
-      system('gradle clean build test --daemon')
+      Test.gradle('clean build test')
     end
     Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
     exit $CHILD_STATUS.exitstatus

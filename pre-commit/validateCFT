@@ -9,6 +9,7 @@ require 'English'
 require_relative '../lib/input'
 require_relative '../lib/changes'
 require_relative '../lib/success'
+require_relative '../lib/test'
 
 @test = 'CFT validation'
 
@@ -42,8 +43,7 @@ getCFT
 
 def validateCFT
   @files.each do |file|
-    system("aws --profile #{@profile} cloudformation validate-template \
-    --template-body file://#{file}")
+    Test.cft(@profile, file)
     break if $CHILD_STATUS.exitstatus != 0
   end
   Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
