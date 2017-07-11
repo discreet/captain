@@ -5,6 +5,8 @@
 # referenced in the SSE GitHub organization GitWorkshop project. If any part of
 # the commit message does not conform you will be prompted to amend the commit.
 #
+require_relative '../lib/format'
+
 editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
 message_file = ARGV[0]
 
@@ -13,32 +15,9 @@ def check_format_rules(line_number, line)
   @line_number = line_number
   @line = line
 
-  check_title_line
-  check_blank_line
-  check_line_chars
-end
-
-def check_title_line
-  if @line_number.zero? && @line.length > 50
-    return "Error #{@real_line_number}: First line should be less than 50 \
-    characters in length."
-  end
-  false
-end
-
-def check_blank_line
-  if @line_number == 1 && !@line.empty?
-    return "Error #{@real_line_number}: Second line should be empty."
-  end
-  false
-end
-
-def check_line_chars
-  if @line.length > 72 && @line[0, 1] != '#'
-    return "Error #{@real_line_number}: No line should be over 72 characters \
-    long."
-  end
-  false
+  Format.title_line(@line, @line_number, @real_line_number)
+  Format.blank_line(@line, @line_number, @real_line_number)
+  Format.line_chars(@line, @real_line_number)
 end
 
 loop do
@@ -59,13 +38,7 @@ loop do
       commit_msg.each { |line| file.puts line }
     end
 
-    print 'Invalid git commit message format.  Press y to edit and n to cancel \
-    the commit. [y/n] '
-    STDIN.reopen('/dev/tty')
-    choice = $stdin.gets.chomp
-
-    exit 1 if %w[no n].include?(choice.downcase)
-    system(editor, "../#{message_file}")
+    Format.fix(message_file, editor)
   end
   break
 end
