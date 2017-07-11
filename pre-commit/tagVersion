@@ -5,10 +5,10 @@
 # user input. The pipeline.properties file will then be added to the commit if
 # the value has been changed.
 #
-@scriptDir = File.expand_path(File.dirname(__FILE__))
+require_relative '../lib/scriptdir'
 
 def getIncrement
-  Dir.chdir(@scriptDir)
+  Dir.chdir(Script.dir)
   Increment.get('../../pipeline.properties')
 end
 getIncrement

@@ -10,12 +10,12 @@ require_relative '../lib/input'
 require_relative '../lib/changes'
 require_relative '../lib/success'
 require_relative '../lib/test'
+require_relative '../lib/scriptdir'
 
 @test = 'CFT validation'
 
 def getInput
-  scriptDir = File.expand_path(File.dirname(__FILE__))
-  Dir.chdir(scriptDir)
+  Dir.chdir(Script.dir)
 
   @appDir = Input.getDir(@test)
 end

@@ -6,12 +6,12 @@
 require 'English'
 require_relative '../lib/success'
 require_relative '../lib/test'
+require_relative '../lib/scriptdir'
 
 @test = maven
 
 def mavenTest
-  scriptDir = File.expand_path(File.dirname(__FILE__))
-  Dir.chdir(scriptDir)
+  Dir.chdir(Script.dir)
 
   Dir.chdir('../../') do
     Test.maven('clean test')
