@@ -25,6 +25,23 @@ module Format
     false
   end
 
+  def self.lines(message_file, commit_msg, errors)
+    File.open("../#{message_file}", 'r').each_with_index do |line, line_number|
+      commit_msg.push line
+      e = check_format_rules(line_number, line.strip)
+      errors.push e if e
+    end
+  end
+
+  def self.errors(message_file, commit_msg, errors)
+    File.open("../#{message_file}", 'w') do |file|
+      file.puts "\n# GIT COMMIT MESSAGE FORMAT ERRORS:"
+      errors.each { |error| file.puts "#    #{error}" }
+      file.puts "\n"
+      commit_msg.each { |line| file.puts line }
+    end
+  end
+
   def self.fix(message_file, editor)
     print 'Invalid git commit message format. Press y to edit and n to cancel \
     the commit. [y/n] '

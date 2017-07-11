@@ -21,22 +21,13 @@ def check_format_rules(line_number, line)
 end
 
 loop do
-  commit_msg = []
-  errors = []
+  @commit_msg = []
+  @errors = []
 
-  File.open("../#{message_file}", 'r').each_with_index do |line, line_number|
-    commit_msg.push line
-    e = check_format_rules line_number, line.strip
-    errors.push e if e
-  end
+  Format.lines(message_file, @commit_msg, @errors)
 
-  unless errors.empty?
-    File.open("../#{message_file}", 'w') do |file|
-      file.puts "\n# GIT COMMIT MESSAGE FORMAT ERRORS:"
-      errors.each { |error| file.puts "#    #{error}" }
-      file.puts "\n"
-      commit_msg.each { |line| file.puts line }
-    end
+  unless @errors.empty?
+    Format.errors(message_file, @commit_msg, @errors)
 
     Format.fix(message_file, editor)
   end

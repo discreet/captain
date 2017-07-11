@@ -4,6 +4,7 @@
 # commit message.
 #
 require 'digest'
+require_relative '../lib/prepare'
 
 def getMessage
   @messageFile = ARGV[0]
@@ -13,28 +14,16 @@ end
 getMessage
 
 def prepSignature
-  shuffled_string = 'Captain'.split('').shuffle.join
-  hashID = Digest::SHA1.hexdigest shuffled_string
-  @hookStatus = "\n#{hookStatus}\
-                 \nSigned off by Captain\
-                 \nApproval ID: #{hashID}\n"
+  Prepare.signature(@hookStatus)
 end
 prepSignature
 
 def formatMessage
-  commentMatch = @originalMessage.match(/((^\#.*$\n){3})/)
-
-  @resultPosition = if commentMatch
-                      commentMatch.offset(0)[0]
-                    else
-                      @orignalMessage.length - 1
-                    end
+  Prepare.message(@originalMessage)
 end
 formatMessage
 
 def prepCommit
-  @originalMessage.insert(@resultPosition, @hookStatus) if ARGV[1] == 'message'
-  File.open("../#{@messageFile}", 'w') { |f| f.write @originalMessage }
-  File.delete('/tmp/hookStatus')
+  Prepare.write(@originalMessage, @resultPosition, @hookStatus, @messageFile)
 end
 prepCommit
