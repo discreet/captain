@@ -14,25 +14,16 @@ require_relative '../lib/scriptdir'
 
 @test = 'gradle'
 
-def getInput
-  Dir.chdir(Script.dir)
-  @appDir = Input.getDir(@test)
-end
-getInput
+Dir.chdir(Script.dir)
+@appDir = Input.getDir(@test)
 
-def checkChanges
-  Dir.chdir('../../') do
-    gradleTest if Changes.findChanges(@appDir, @test)
-  end
-end
-checkChanges
-
-def gradleTest
-  Dir.chdir('../../') do
+Dir.chdir('../../') do
+  case Changes.findChanges(@appDir, @test)
+  when true
     Dir.chdir(@appDir) do
       Test.gradle('clean build test')
     end
     Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
-    exit $CHILD_STATUS.exitstatus
+    exit 1
   end
 end
