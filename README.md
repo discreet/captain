@@ -1,3 +1,5 @@
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=f
+lat)](https://github.kdc.capitalone.com/PhantomoftheOps/captain/issues)
 [![CircleCI](https://circle-poc.cloud.capitalone.com/gh/phantomoftheops/captain.svg?style=shield&circle-token=73a085435d172923367cdacddc52c23d9a8e5daf)](https://circle-poc.cloud.capitalone.com/gh/phantomoftheops/captain)
 
 # Captain
