@@ -8,15 +8,12 @@ require_relative '../lib/success'
 require_relative '../lib/test'
 require_relative '../lib/scriptdir'
 
-@test = maven
+@test = 'maven'
 
-def mavenTest
-  Dir.chdir(Script.dir)
+Dir.chdir(Script.dir)
 
-  Dir.chdir('../../') do
-    Test.maven('clean test')
-    Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
-    exit $CHILD_STATUS.exitstatus
-  end
+Dir.chdir('../../') do
+  Test.maven('clean test')
+  Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
+  exit $CHILD_STATUS.exitstatus
 end
-mavenTest

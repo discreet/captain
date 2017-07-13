@@ -6,24 +6,10 @@
 require 'digest'
 require_relative '../lib/prepare'
 
-def getMessage
-  @messageFile = ARGV[0]
-  @originalMessage = File.read("../#{messageFile}")
-  @hookStatus = File.read('/tmp/hookStatus')
-end
-getMessage
+@messageFile = ARGV[0]
+@originalMessage = File.read("../#{messageFile}")
+@hookStatus = File.read('/tmp/hookStatus')
 
-def prepSignature
-  Prepare.signature(@hookStatus)
-end
-prepSignature
-
-def formatMessage
-  Prepare.message(@originalMessage)
-end
-formatMessage
-
-def prepCommit
-  Prepare.write(@originalMessage, @resultPosition, @hookStatus, @messageFile)
-end
-prepCommit
+Prepare.signature(@hookStatus)
+Prepare.message(@originalMessage)
+Prepare.write(@originalMessage, @resultPosition, @hookStatus, @messageFile)

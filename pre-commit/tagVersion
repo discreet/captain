@@ -6,32 +6,19 @@
 # the value has been changed.
 #
 require_relative '../lib/scriptdir'
+require_relative '../lib/version'
 
-def getIncrement
-  Dir.chdir(Script.dir)
-  Increment.get('../../pipeline.properties')
-end
-getIncrement
+Dir.chdir(Script.dir)
+Increment.get('../../pipeline.properties')
 
-def newIncrement
-  puts 'acceptable increment values: [major, minor, patch]'
-  Increment.new
-end
-newIncrement
+puts 'acceptable increment values: [major, minor, patch]'
+Increment.new
 
-def validateIncrement
-  updateProperties unless Increment.validate
-end
-validateIncrement
+updateProperties unless Increment.validate
 
-def updateProperties
-  Increment.change('../../pipeline.properties')
-end
+Increment.change('../../pipeline.properties')
 
-def updateGit
-  Dir.chdir('../..') do
-    system('git add pipeline.properties')
-    exit 0
-  end
+Dir.chdir('../..') do
+  system('git add pipeline.properties')
+  exit 0
 end
-updateGit

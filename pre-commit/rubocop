@@ -14,26 +14,18 @@ require_relative '../lib/scriptdir'
 
 @test = 'rubocop'
 
-def getInput
-  Dir.chdir(Script.dir)
+Dir.chdir(Script.dir)
+@appDir = Input.getDir(@test)
 
-  @appDir = Input.getDir(@test)
-end
-getInput
-
-def checkChanges
-  Dir.chdir('../../') do
-    rubocopTest if Changes.findChanges(@appDir, @test)
-  end
-end
-checkChanges
-
-def rubocopTest
-  Dir.chdir('../../') do
+Dir.chdir('../../') do
+  case Changes.findChanges(@appDir, @test)
+  when true
     Dir.chdir(@appDir) do
-      Test.rubocop
+      rubocopTest
     end
     Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
     exit $CHILD_STATUS.exitstatus
+  else
+    exit 0
   end
 end

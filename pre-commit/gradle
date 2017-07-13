@@ -24,6 +24,8 @@ Dir.chdir('../../') do
       Test.gradle('clean build test')
     end
     Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
-    exit 1
+    exit $CHILD_STATUS.exitstatus
+  else
+    exit 0
   end
 end

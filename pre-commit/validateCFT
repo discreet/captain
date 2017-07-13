@@ -14,39 +14,28 @@ require_relative '../lib/scriptdir'
 
 @test = 'CFT validation'
 
-def getInput
-  Dir.chdir(Script.dir)
+Dir.chdir(Script.dir)
+@appDir = Input.getDir(@test)
 
-  @appDir = Input.getDir(@test)
-end
+Dir.chdir('../../') do
+  case Changes.findChanges(@appDir, @test)
+  when true
+    Dir.chdir(@appDir) do
+      print 'specify the profile for authentication: '
+      STDIN.reopen('/dev/tty')
+      @profile = $stdin.gets.chomp
 
-def checkChanges
-  Dir.chdir('../../') do
-    getAWSCreds if Changes.findChanges(@appDir, @test)
+      @files = Dir.entries('.').reject { |f| File.directory? f }\
+                  .select { |i| i =~ /\.json|\.yaml|\.yml/ }
+
+      @files.each do |file|
+        Test.cft(@profile, file)
+        break if $CHILD_STATUS.exitstatus != 0
+      end
+      Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
+      exit $CHILD_STATUS.exitstatus
+    end
+  else
+    exit 0
   end
 end
-checkChanges
-
-def getAWSCreds
-  print 'specify the profile for authentication: '
-  STDIN.reopen('/dev/tty')
-  @profile = $stdin.gets.chomp
-end
-
-def getCFT
-  Dir.chdir(@cftDir) do
-    @files = Dir.entries('.').reject { |f| File.directory? f }\
-                .select { |i| i =~ /\.json|\.yaml|\.yml/ }
-  end
-end
-getCFT
-
-def validateCFT
-  @files.each do |file|
-    Test.cft(@profile, file)
-    break if $CHILD_STATUS.exitstatus != 0
-  end
-  Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
-  exit $CHILD_STATUS.exitstatus
-end
-validateCFT
