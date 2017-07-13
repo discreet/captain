@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 ### Added
+- Refactor code to be testable
+- LGTMeow configuration
+- CircleCI configuration
 - Rubocop pre-commit hook
 - Refactored hooks to meet Rubocop standards
 - .rubocop file
-- Jenkinsfile for CI builds
 
 ## [v1.0.0-RC2] - 2017-05-17
 ### Added
