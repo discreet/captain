@@ -4,10 +4,13 @@
 #
 module Changes
   def self.findChanges(changesDir, test)
-    case system("git diff --staged --name-only | grep #{changesDir}/")
-    when true
+    system("git diff --staged --name-only | grep #{changesDir}/")
+    case $CHILD_STATUS.zero?
+    when false
       File.open('/tmp/hookStatus', 'a') { |f| f.write("#{test}: no changes\n") }
       exit 0
+    when true
+      return true
     end
   end
 end
