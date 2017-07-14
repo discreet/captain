@@ -8,7 +8,7 @@
 require 'English'
 require_relative '../lib/captain'
 
-Captain.new('gradle')
+captain = Captain.new('gradle')
 
 Dir.chdir(Info.scriptDir)
 @appDir = Info.getDir
