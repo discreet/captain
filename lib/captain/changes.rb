@@ -2,8 +2,9 @@ module Captain
   class Changes
     attr_reader :directory
 
-    def initialize(dir=nil)
+    def initialize(dir = nil)
       @directory = dir.nil? ? choose_dir : dir
+      @directory = Dir.pwd if @directory == '.'
     end
 
     def changed?
@@ -13,7 +14,7 @@ module Captain
     private
 
     def choose_dir
-      print "specify directory to run in: "
+      print 'specify directory to run in: '
       STDIN.reopen('/dev/tty')
       $stdin.gets.chomp
     end

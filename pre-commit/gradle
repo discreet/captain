@@ -11,7 +11,7 @@ changes = Captain::Changes.new
 logger = Captain::Logger.new
 
 if changes.changed?
-  logger.info("Test Successful") #if things
+  logger.info('Test Successful') # if things
 else
-  logger.info("No changes to test")
+  logger.info('No changes to test')
 end
