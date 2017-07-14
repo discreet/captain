@@ -7,11 +7,10 @@
 #
 require_relative '../lib/captain'
 
-captain = Captain::Changes.new
+changes = Captain::Changes.new
 logger = Captain::Logger.new
 
-if captain.changed?
-  #run test
+if changes.changed?
   logger.info("Test Successful") #if things
 else
   logger.info("No changes to test")

@@ -7,10 +7,10 @@ module Captain
 
     attr_reader :logger
 
-    def intitialize(filename = '/tmp/captain.log')
+    def initialize(filename = '/tmp/captain.log')
       @logger = ::Logger.new(filename, 'monthly')
     end
 
-    def_delegators :logger, :error, :info, :warn, :debug
+    def_delegators :@logger, :error, :info, :warn, :debug
   end
 end
