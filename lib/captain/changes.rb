@@ -2,8 +2,8 @@ module Captain
   class Changes
     attr_reader :directory
 
-    def initialize
-      @directory = choose_dir
+    def initialize(dir=nil)
+      @directory = dir.nil? ? choose_dir : dir
     end
 
     def changed?
