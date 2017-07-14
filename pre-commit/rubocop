@@ -5,25 +5,21 @@
 # are no changes the script exits 0. If changes are detected the tests are
 # executed. If all tests pass it will exit 0.
 #
-require 'Engish'
-require_relative '../lib/input'
-require_relative '../lib/changes'
-require_relative '../lib/success'
-require_relative '../lib/test'
-require_relative '../lib/scriptdir'
+require 'English'
+require_relative '../lib/captain'
 
-@test = 'rubocop'
+Captain.new('rubocop')
 
-Dir.chdir(Script.dir)
-@appDir = Input.getDir(@test)
+Dir.chdir(Info.scriptDir)
+@appDir = Info.getDir
 
-Dir.chdir('../../') do
-  case Changes.findChanges(@appDir, @test)
+Dir.chdir('../') do
+  case Info.findChanges(@appDir)
   when true
     Dir.chdir(@appDir) do
-      rubocopTest
+      Test.rubocop
     end
-    Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
+    Info.success if $CHILD_STATUS.exitstatus.zero?
     exit $CHILD_STATUS.exitstatus
   else
     exit 0

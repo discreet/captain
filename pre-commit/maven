@@ -4,16 +4,14 @@
 # project. If all tests pass it will exit 0.
 #
 require 'English'
-require_relative '../lib/success'
-require_relative '../lib/test'
-require_relative '../lib/scriptdir'
+require_relative '../lib/captain'
 
-@test = 'maven'
+Captain.new('maven')
 
-Dir.chdir(Script.dir)
+Dir.chdir(Info.scriptDir)
 
 Dir.chdir('../../') do
   Test.maven('clean test')
-  Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
+  Info.success if $CHILD_STATUS.exitstatus.zero?
   exit $CHILD_STATUS.exitstatus
 end
