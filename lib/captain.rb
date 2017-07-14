@@ -1,11 +1,5 @@
-require_relative 'info'
+require_relative 'captain/logger'
+require_relative 'captain/changes.rb'
 
-class Captain
-  include Info
-
-  def initialize(test)
-    @test = test
-  end
-
-  attr_reader :test
+module Captain
 end
