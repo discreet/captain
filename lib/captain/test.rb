@@ -6,11 +6,21 @@ module Captain
       @test = test
     end
 
-    case @test
-    when 'gradle'
-      def gradle(cmd)
-        system("gradle #{cmd}")
-      end
+    def gradle(cmd)
+       system("gradle #{cmd}")
+    end
+
+    def maven(cmd)
+      system("mvn #{cmd}")
+    end
+
+    def rubocop(cmd)
+      system("rubocop #{cmd}")
+    end
+
+    def cft(profile, file)
+      system("aws --profile #{profile} cloudformation validate-template \
+             --template-body file://#{file}")
     end
   end
 end
