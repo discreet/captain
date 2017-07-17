@@ -1,24 +1,19 @@
 module Captain
   class Test
-    attr_reader :test
 
-    def initialize(test)
-      @test = test
-    end
-
-    def gradle(*cmd)
+    def self.gradle(*cmd)
        system('gradle', '--daemon', cmd)
     end
 
-    def maven(*cmd)
+    def self.maven(*cmd)
       system('mvn',cmd)
     end
 
-    def rubocop(*cmd)
+    def self.rubocop(*cmd)
       system('rubocop', cmd)
     end
 
-    def cft(profile, file)
+    def self.cft(profile, file)
       system('aws', '--profile', profile, 'cloudformation', \
              'validate-template', '--template-body', "file://#{file}")
     end
