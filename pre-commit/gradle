@@ -12,8 +12,8 @@ logger = Captain::Logger.new
 test = Captain::Test.new('gradle')
 
 if changes.changed?
-  test.gradle('clean test build -daemon')
-  logger.info('Test Successful') # if things
+  Captain::Test.gradle('clean', 'test', 'build')
+  logger.info('Test Successful')
 else
   logger.info('No changes to test')
 end
