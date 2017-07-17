@@ -9,7 +9,6 @@ require_relative '../lib/captain'
 
 changes = Captain::Changes.new
 logger = Captain::Logger.new
-test = Captain::Test.new('gradle')
 
 if changes.changed?
   Captain::Test.gradle('clean', 'test', 'build')
