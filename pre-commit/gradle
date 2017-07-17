@@ -9,8 +9,10 @@ require_relative '../lib/captain'
 
 changes = Captain::Changes.new
 logger = Captain::Logger.new
+test = Captain::Test.new('gradle')
 
 if changes.changed?
+  test.gradle('clean test build -daemon')
   logger.info('Test Successful') # if things
 else
   logger.info('No changes to test')
