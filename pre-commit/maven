@@ -3,15 +3,14 @@
 # This will run a clean maven test. It is configured to run from the root of the
 # project. If all tests pass it will exit 0.
 #
-require 'English'
 require_relative '../lib/captain'
 
-Captain.new('maven')
+changes = Captain::Changes.new
+logger = Captain::Logger.new
 
-Dir.chdir(Info.scriptDir)
-
-Dir.chdir('../../') do
-  Test.maven('clean test')
-  Info.success if $CHILD_STATUS.exitstatus.zero?
-  exit $CHILD_STATUS.exitstatus
+if changes.changed?
+  Captain::Test.maven('clean', 'test')
+  logger.info('Test Successful')
+else
+  logger.info('No changes to test')
 end
