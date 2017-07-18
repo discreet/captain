@@ -6,36 +6,24 @@
 # passes it will exit 0. If no changes are detected it will exit 0
 #
 require 'English'
-require_relative '../lib/input'
-require_relative '../lib/changes'
-require_relative '../lib/success'
-require_relative '../lib/test'
-require_relative '../lib/scriptdir'
+require_relative '../lib/captain'
 
-@test = 'CFT validation'
+changes = Captain::Changes.new
+logger = Captain::Logger.new
 
-Dir.chdir(Script.dir)
-@appDir = Input.getDir(@test)
+if changes.changed?
+  @files = Dir.entries('.').reject { |f| File.directory? f }\
+              .select { |i| i =~ /\.json|\.yaml|\.yml/ }
 
-Dir.chdir('../../') do
-  case Changes.findChanges(@appDir, @test)
-  when true
-    Dir.chdir(@appDir) do
-      print 'specify the profile for authentication: '
-      STDIN.reopen('/dev/tty')
-      @profile = $stdin.gets.chomp
+  print 'specify the profile for authentication: '
+  STDIN.reopen('/dev/tty')
+  @profile = $stdin.gets.chomp
 
-      @files = Dir.entries('.').reject { |f| File.directory? f }\
-                  .select { |i| i =~ /\.json|\.yaml|\.yml/ }
-
-      @files.each do |file|
-        Test.cft(@profile, file)
+  @files.each do |file|
+    Captain::Test.cft(@profile, file)
         break if $CHILD_STATUS.exitstatus != 0
-      end
-      Success.success(@test) if $CHILD_STATUS.exitstatus.zero?
-      exit $CHILD_STATUS.exitstatus
-    end
-  else
-    exit 0
   end
+  logger.info('Test Successful')
+else
+  logger.info('No changes to test')
 end
