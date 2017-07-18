@@ -12,15 +12,15 @@ changes = Captain::Changes.new
 logger = Captain::Logger.new
 
 if changes.changed?
-  @files = Dir.entries('.').reject { |f| File.directory? f }\
+  files = Dir.entries('.').reject { |f| File.directory? f }\
               .select { |i| i =~ /\.json|\.yaml|\.yml/ }
 
   print 'specify the profile for authentication: '
   STDIN.reopen('/dev/tty')
-  @profile = $stdin.gets.chomp
+  profile = $stdin.gets.chomp
 
-  @files.each do |file|
-    Captain::Test.cft(@profile, file)
+  files.each do |file|
+    Captain::Test.cft(profile, file)
         break if $CHILD_STATUS.exitstatus != 0
   end
   logger.info('Test Successful')
