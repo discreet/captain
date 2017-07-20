@@ -5,31 +5,36 @@
 # referenced in the SSE GitHub organization GitWorkshop project. If any part of
 # the commit message does not conform you will be prompted to amend the commit.
 #
-require_relative '../lib/format'
+require_relative '../lib/captain'
 
 editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
 message_file = ARGV[0]
 
-def check_format_rules(line_number, line)
-  @real_line_number = line_number + 1
-  @line_number = line_number
-  @line = line
-
-  Format.title_line(@line, @line_number, @real_line_number)
-  Format.blank_line(@line, @line_number, @real_line_number)
-  Format.line_chars(@line, @real_line_number)
+def check_format(line, line,number)
+  Captain::Rules.title_line(line, line_number)
+  Captain::Rules.blank_line(line, line_number)
+  Captain::Rules.line_chars(line)
 end
 
 loop do
-  @commit_msg = []
-  @errors = []
+  commit_msg = []
+  errors = []
 
-  Format.lines(message_file, @commit_msg, @errors)
+  File.open(message_file, 'r').each_with_index do |line, line_number|
+    commit_msg.push line
+    e = check_format(line.strip, line_number)
+    errors.push e if e
+  end
 
-  unless @errors.empty?
-    Format.errors(message_file, @commit_msg, @errors)
-
-    Format.fix(message_file, editor)
+  unless errors.empy?
+    File.open(message_file, 'w') do |file|
+      file.puts "\n#GIT COMMIT MESSAGE FORMAT ERRORS:"
+      errors.each { |error file.puts "# #{error}" }
+      file.puts "\n"
+      commit_msg.each { |line| file.puts line }
+    end
+    Captain::Rules.fix
+    next if `#{editor} #{message_file}`
   end
   break
 end
