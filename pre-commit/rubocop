@@ -11,6 +11,7 @@ changes = Captain::Changes.new
 logger = Captain::Logger.new
 
 if changes.changed?
+  Captain::Test.directory(changes.directory)
   Captain::Test.rubocop
   logger.info('Test Successful')
 else

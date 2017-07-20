@@ -8,7 +8,9 @@ require_relative '../lib/captain'
 changes = Captain::Changes.new
 logger = Captain::Logger.new
 
+
 if changes.changed?
+  Captain::Test.directory(changes.directory)
   Captain::Test.maven('clean', 'test')
   logger.info('Test Successful')
 else
