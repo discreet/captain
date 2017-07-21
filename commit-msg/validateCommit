@@ -10,10 +10,12 @@ require_relative '../lib/captain'
 editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
 message_file = ARGV[0]
 
-def check_format(line, line,number)
-  Captain::Rules.title_line(line, line_number)
-  Captain::Rules.blank_line(line, line_number)
-  Captain::Rules.line_chars(line)
+def check_format(line, line_number)
+  rules = Captain::Rules.new(line_number)
+
+  rules.title_line(line)
+  rules.blank_line(line)
+  rules.line_chars(line)
 end
 
 loop do
