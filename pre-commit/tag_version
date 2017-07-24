@@ -4,7 +4,7 @@ require_relative '../lib/captain'
 
 Captain::Version.get
 
-puts "current version to increment is #{increment}"
+puts "current version to increment is #{@increment}"
 print 'would you like to change this setting [y/n]: '
 STDIN.reopen('/dev/tty')
 choice = $stdin.gets.chomp

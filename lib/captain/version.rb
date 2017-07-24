@@ -6,7 +6,7 @@ module Captain
       Dir.chdir('../../')
 
       @properties = File.read('pipeline.properties')
-      increment = @properties[/major$|minor$|patch$/]
+      @increment = @properties[/major$|minor$|patch$/]
     end
 
     def self.change(version)
