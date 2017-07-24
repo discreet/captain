@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 
-Dir.chdir(File.expand_path(File.dirname(__FILE__)))
-Dir.chdir('../../')
+require_relative '../lib/captain'
 
-properties = File.read('pipeline.properties')
-increment = properties[/major$|minor$|patch$/]
+Captain::Version.get
 
 puts "current version to increment is #{increment}"
 print 'would you like to change this setting [y/n]: '
@@ -17,7 +15,6 @@ print 'version to increment: '
 STDIN.reopen('/dev/tty')
 version = $stdin.gets.chomp
 
-new_increment = properties.gsub(/(major$|minor$|patch$)/, version)
-File.open('pipeline.properties', 'w') { |file| file.puts new_increment }
+Captain::Version.change(version)
 
 system('git add pipeline.properties')
