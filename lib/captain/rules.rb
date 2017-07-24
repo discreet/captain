@@ -1,32 +1,56 @@
 module Captain
   class Rules
-    def initialize(line_number)
-      @line_number = line_number
-      @real_line_number = line_number + 1
+    def initialize(file)
+      @file = file
     end
 
-    def self.title_line(line)
-      return if @line_number.zero? && line.length > 50
-      "Error #{@real_line_number}: First line should be less than 50 \
-      characters in length."
+    def title
+      @title ||= @file.lines.first
     end
 
-    def self.blank_line(line)
-      "Error #{@real_line_number}: Second line should be empty." \
-      if @line_number == 1 && !line.empty?
+    def valid_title?
+      @title.length <= 50
     end
 
-    def self.line_chars(line)
-      return if line.length > 72 && line[0, 1] != '#'
-      "Error #{@real_line_number}: No line should be over 72 characters \
-      long."
+    def blank_line
+      @blank_line ||= @file.lines[1]
     end
 
-    def self.fix
-      print 'Invalid git commit message format. Press y to edit and n to \
-      cancel the commit. [y/n]: '
-      choice = $stdin.gets.chomp
-      exit 1 if %w[no n].include?(choice.downcase)
+    def valid_blank_line?
+      @blank_line.empty?
     end
+
+    def line_length
+      @lines ||= @file.lines
+    end
+
+    def valid_line_length
+      @lines.each do |line|
+        line.length >= 72 if @lines[0, 1] != '#'
+      end
+    end
+
+    # disabling Metrics/MethodLength for the below method since it is just used
+    # to create an array of error messages.
+    # rubocop:disable Metrics/MethodLength
+
+    def errors
+      errors = []
+
+      unless valid_title?
+        errors << 'Error Title Line: Title should be less than 50 characters'
+      end
+
+      unless valid_blank_line?
+        errors << 'Error Blank Line: Second line should be empty'
+      end
+
+      unless valid_line_length?
+        errors << 'Error Line Length: No line should be over 72 characters'
+      end
+
+      errors
+    end
+    # rubocop:enable Metrics/MethodLength
   end
 end
