@@ -31,12 +31,12 @@ loop do
   unless errors.empy?
     File.open(message_file, 'w') do |file|
       file.puts "\n#GIT COMMIT MESSAGE FORMAT ERRORS:"
-      errors.each { |error file.puts "# #{error}" }
+      errors.each { |error| file.puts "# #{error}" }
       file.puts "\n"
       commit_msg.each { |line| file.puts line }
     end
     Captain::Rules.fix
-    next if `#{editor} #{message_file}`
+    next if system("#{editor} #{message_file}")
   end
   break
 end
