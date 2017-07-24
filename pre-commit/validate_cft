@@ -12,6 +12,7 @@ changes = Captain::Changes.new
 logger = Captain::Logger.new
 
 if changes.changed?
+  Captain::Test.directory(changes.directory)
   files = Dir.entries('.').reject { |f| File.directory? f }\
               .select { |i| i =~ /\.json|\.yaml|\.yml/ }
 

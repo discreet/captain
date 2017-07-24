@@ -1,0 +1,42 @@
+#!/usr/bin/ruby
+#
+# this script is used to validate the format of a commit message. The format is
+# based on the best practice standards taught in the SSE Dojo and can be
+# referenced in the SSE GitHub organization GitWorkshop project. If any part of
+# the commit message does not conform you will be prompted to amend the commit.
+#
+require_relative '../lib/captain'
+
+editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
+message_file = ARGV[0]
+
+def check_format(line, line_number)
+  rules = Captain::Rules.new(line_number)
+
+  rules.title_line(line)
+  rules.blank_line(line)
+  rules.line_chars(line)
+end
+
+loop do
+  commit_msg = []
+  errors = []
+
+  File.open(message_file, 'r').each_with_index do |line, line_number|
+    commit_msg.push line
+    e = check_format(line.strip, line_number)
+    errors.push e if e
+  end
+
+  unless errors.empy?
+    File.open(message_file, 'w') do |file|
+      file.puts "\n#GIT COMMIT MESSAGE FORMAT ERRORS:"
+      errors.each { |error file.puts "# #{error}" }
+      file.puts "\n"
+      commit_msg.each { |line| file.puts line }
+    end
+    Captain::Rules.fix
+    next if `#{editor} #{message_file}`
+  end
+  break
+end
