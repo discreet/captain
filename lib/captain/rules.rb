@@ -20,14 +20,12 @@ module Captain
       @blank_line.empty?
     end
 
-    def line_length
-      @lines ||= @file.lines
+    def body
+      @body ||= @file.lines[2..-1].reject { |line| line =~ /\A\s*#/ }
     end
 
-    def valid_line_length
-      @lines.each do |line|
-        line.length >= 72 if @lines[0, 1] != '#'
-      end
+    def body_valid?
+        body.all? { |line| line <= 72 }
     end
 
     # disabling Metrics/MethodLength for the below method since it is just used
@@ -51,6 +49,7 @@ module Captain
 
       errors
     end
+
     # rubocop:enable Metrics/MethodLength
   end
 end
