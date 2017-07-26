@@ -1,7 +1,10 @@
 module Captain
   class Rules
+    attr_reader :errors
+
     def initialize(file)
       @file = file
+      @errors = []
     end
 
     def title
@@ -10,6 +13,7 @@ module Captain
 
     def valid_title?
       @title.length <= 50
+      @errors << 'Error Title Line: Title should be less than 50 characters'
     end
 
     def blank_line
@@ -22,34 +26,17 @@ module Captain
 
     def body
       @body ||= @file.lines[2..-1].reject { |line| line =~ /\A\s*#/ }
+      @errors << 'Error Blank Line: Second line should be empty'
     end
 
     def body_valid?
         body.all? { |line| line <= 72 }
+        @errors << 'Error Line Length: No line should be over 72 characters'
     end
 
-    # disabling Metrics/MethodLength for the below method since it is just used
-    # to create an array of error messages.
-    # rubocop:disable Metrics/MethodLength
-
-    def errors
-      errors = []
-
-      unless valid_title?
-        errors << 'Error Title Line: Title should be less than 50 characters'
-      end
-
-      unless valid_blank_line?
-        errors << 'Error Blank Line: Second line should be empty'
-      end
-
-      unless valid_line_length?
-        errors << 'Error Line Length: No line should be over 72 characters'
-      end
-
-      errors
+    def validate!
+      @errors = []
+      valid_title? && valid_blank_line? && valid_body?
     end
-
-    # rubocop:enable Metrics/MethodLength
   end
 end
