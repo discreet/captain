@@ -17,7 +17,7 @@ module Captain
     end
 
     def valid_title?
-      return true if title.length <= 50
+      return true if title.length <= 50 && !title.start_with?("\n")
       @errors << 'Error Title Line: Title should be less than 50 characters'
       false
     end
@@ -27,7 +27,7 @@ module Captain
     end
 
     def valid_second_line?
-      return true if second_line.start_with?("\n")
+      return true if second_line.start_with?("\n") && !second_line.nil?
       @errors << 'Error Blank Line: Second line should be empty'
       false
     end
@@ -37,7 +37,7 @@ module Captain
     end
 
     def valid_body?
-      return true if body.all? { |line| line.length <= 72 }
+      return true if body.all? { |line| line.length <= 72 && !line.nil? }
       @errors << 'Error Line Length: No line should be over 72 characters'
       false
     end
