@@ -28,7 +28,7 @@ loop do
     choice = $stdin.gets.chomp
 
     exit 1 if %w[no n].include?(choice.downcase)
-    next if system("#{editor} #{message_file}") if %w[yes y].include?(choice.downcase)
+    next if system("#{editor} #{message_file}")
   end
   break
 end
