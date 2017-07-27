@@ -8,20 +8,27 @@
 require_relative '../lib/captain'
 
 editor = ENV['EDITOR'] != 'none' ? ENV['EDITOR'] : 'vim'
-message_file = File.readlines(ARGV[0])
-commit_msg = []
+message_file = ARGV[0]
 
-rules = Captain::Rules.new(message_file)
+loop do
+  rules = Captain::Rules.new(File.readlines(message_file))
 
-unless rules.validate!
-  commit_msg.push("\n", '#GIT COMMIT MESSAGE FORMAT ERRORS:', "\n")
-  rules.errors.each { |err| commit_msg.push("# #{err}") }
-  commit_msg.push("\n")
-  message_file.each { |line| commit_msg.push(line) }
+  unless rules.validate!
+    File.open(message_file, 'w') do |file|
+      file.puts '#GIT COMMIT MESSAGE FORMAT ERRORS:'
+      rules.errors.each { |err| file.puts "# #{err}" }
+      file.puts '#'
+      rules.lines.each { |line| file.puts line }
+    end
 
-  print 'Invalid git commit message format. Press y to edit and n to cancel the commit. [y/n]: '
-  STDIN.reopen('/dev/tty')
-  choice = $stdin.gets.chomp
-  exit 1 if %w[no n].include?(choice.downcase)
-  system("#{editor} #{message_file}") if %w[yes y].include?(choice.downcase)
+    puts 'Invalid git commit message format.'
+    puts rules.errors
+    print 'Press y to edit and n to cancel the commit. [y/n]: '
+    STDIN.reopen('/dev/tty')
+    choice = $stdin.gets.chomp
+
+    exit 1 if %w[no n].include?(choice.downcase)
+    next if system("#{editor} #{message_file}") if %w[yes y].include?(choice.downcase)
+  end
+  break
 end
