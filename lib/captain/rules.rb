@@ -29,7 +29,7 @@ module Captain
     end
 
     def body
-      @body ||= @lines[2..-1]#.reject { |line| line =~ /\A\s*#/ }
+      @body ||= @lines[2..-1]
     end
 
     def valid_body?
