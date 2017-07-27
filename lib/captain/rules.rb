@@ -4,7 +4,7 @@ module Captain
     attr_reader :lines
 
     def initialize(lines)
-      @lines = lines.reject { |line| line =~ /\A\s*#/ }
+      @lines = lines
       @errors = []
     end
 
@@ -29,7 +29,7 @@ module Captain
     end
 
     def body
-      @body ||= @lines[2..-1]
+      @body ||= @lines[2..-1].reject { |line| line =~ /\A\s*#/ }
     end
 
     def valid_body?
