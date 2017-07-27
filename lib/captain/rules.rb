@@ -37,7 +37,6 @@ module Captain
     def validate!
       valid_title? && valid_blank_line? && valid_body?
       return false if @errors
-      @blank_line ||= @file.lines[1]
     end
   end
 end
