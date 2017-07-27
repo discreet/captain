@@ -1,12 +1,11 @@
 module Captain
   class Version
-
     def self.get
       Dir.chdir(File.expand_path(File.dirname(__FILE__)))
       Dir.chdir('../../')
 
       @properties = File.read('pipeline.properties')
-      increment = @properties[/major$|minor$|patch$/]
+      @increment = @properties[/major$|minor$|patch$/]
     end
 
     def self.change(version)

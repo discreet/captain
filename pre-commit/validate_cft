@@ -14,7 +14,7 @@ logger = Captain::Logger.new
 if changes.changed?
   Captain::Test.directory(changes.directory)
   files = Dir.entries('.').reject { |f| File.directory? f }\
-              .select { |i| i =~ /\.json|\.yaml|\.yml/ }
+             .select { |i| i =~ /\.json|\.yaml|\.yml/ }
 
   print 'specify the profile for authentication: '
   STDIN.reopen('/dev/tty')
@@ -22,7 +22,7 @@ if changes.changed?
 
   files.each do |file|
     Captain::Test.cft(profile, file)
-        break if $CHILD_STATUS.exitstatus != 0
+    break if $CHILD_STATUS.exitstatus != 0
   end
   logger.info('Test Successful')
 else

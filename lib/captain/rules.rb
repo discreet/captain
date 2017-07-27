@@ -1,35 +1,42 @@
 module Captain
   class Rules
+    attr_reader :errors
 
-    def initialize(line_number)
-      @line_number = line_number
-      @real_line_number = line_number + 1
+    def initialize(lines)
+      @lines = lines
+      @errors = []
     end
 
-    def self.title_line(line)
-      if @line_number.zero? && line.length > 50
-        return "Error #{@real_line_number}: First line should be less than 50 \
-        characters in length."
-      end
+    def title
+      @title ||= @lines.first
     end
 
-    def self.blank_line(line)
-      if @line_number == 1 && !line.empty?
-        return "Error #{@real_line_number}: Second line should be empty."
-      end
+    def valid_title?
+      return true if title.length <= 50
+      @errors << 'Error Title Line: Title should be less than 50 characters'
     end
 
-    def self.line_chars(line)
-      if line.length > 72 && line[0, 1] != '#'
-        return "Error #{@real_line_number}: No line should be over 72 \
-        characters long."
-      end
+    def blank_line
+      @blank_line ||= @lines[1]
     end
 
-    def self.fix
-      print 'Invalid git commit message format. Press y to edit and n to \
-      cancel the commit. [y/n]: '
-      choice = $stdin.gets.chomp
-      exit 1 if %w(no n).include?(choice.downcase)
+    def valid_blank_line?
+      return true if blank_line.empty?
+      @errors << 'Error Blank Line: Second line should be empty'
     end
+
+    def body
+      @body ||= @lines[2..-1].reject { |line| line =~ /\A\s*#/ }
+    end
+
+    def valid_body?
+      return true if body.all? { |line| line.length <= 72 }
+      @errors << 'Error Line Length: No line should be over 72 characters'
+    end
+
+    def validate!
+      valid_title? && valid_blank_line? && valid_body?
+      return false if @errors
+    end
+  end
 end
