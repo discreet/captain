@@ -4,7 +4,7 @@ module Captain
     attr_reader :lines
 
     def initialize(lines)
-      @lines = lines.reject { |line| line =~ /\A\s*#/ }
+      @lines = lines
       @errors = []
     end
 
@@ -13,7 +13,7 @@ module Captain
     end
 
     def valid_title?
-      return true if title.length <= 50 && !title.start_with?("\n")
+      return true if title.length <= 50
       @errors << 'Error Title Line: Title should be less than 50 characters'
       return false
     end
@@ -23,17 +23,17 @@ module Captain
     end
 
     def valid_second_line?
-      return true if second_line.start_with?("\n") || !second_line.nil?
+      return true if second_line.start_with?("\n")
       @errors << 'Error Blank Line: Second line should be empty'
       return false
     end
 
     def body
-      @body ||= @lines[2..-1]
+      @body ||= @lines[2..-1].reject { |line| line =~ /\A\s*#/ }
     end
 
     def valid_body?
-      return true if body.all? { |line| line.length <= 72 && !line.nil? }
+      return true if body.all? { |line| line.length <= 72 }
       @errors << 'Error Line Length: No line should be over 72 characters'
       return false
     end
