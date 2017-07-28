@@ -27,7 +27,7 @@ loop do
     STDIN.reopen('/dev/tty')
     choice = $stdin.gets.chomp
 
-    exit 0 if %w[no n].include?(choice.downcase)
+    exit 1 if %w[no n].include?(choice.downcase)
     next if system("#{editor} #{message_file}")
   end
   break
