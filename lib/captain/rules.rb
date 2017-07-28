@@ -9,7 +9,7 @@ module Captain
     end
 
     def validate!
-      valid_title? && valid_second_line? && valid_body?
+      nil_lines? && valid_title? && valid_second_line? && valid_body?
     end
 
     private
@@ -45,6 +45,13 @@ module Captain
     def valid_body?
       return true if body.all? { |line| line.length <= 72 && !line.nil? }
       @errors << 'Error Line Length: No line should be over 72 characters'
+      false
+    end
+
+    def nil_lines?
+      if second_line.nil? || body.any?.nil?
+        @errors << 'Error Only Title Line: Message should be more than a title'
+      end
       false
     end
   end
