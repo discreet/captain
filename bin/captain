@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 
-require 'captain'
+require_relative '../lib/captain'
+require_relative '../lib/captain/cli'
 
 # Use is TBD possibly an "init" function to stub out the configuration
