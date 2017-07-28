@@ -49,9 +49,8 @@ module Captain
     end
 
     def nil_lines?
-      if second_line.nil? || body.any?.nil?
-        @errors << 'Error Only Title Line: Message should be more than a title'
-      end
+      return true if !second_line.nil? && !body.nil?
+      @errors << 'Error Only Title Line: Message should be more than a title'
       false
     end
   end
