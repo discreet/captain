@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'captain'
+
+# Use is TBD possibly an "init" function to stub out the configuration
