@@ -1,6 +1,5 @@
 module Captain
   class Test
-
     def self.directory(directory)
       Dir.chdir(File.expand_path(File.dirname(__FILE__)))
       Dir.chdir('../../')
@@ -8,11 +7,11 @@ module Captain
     end
 
     def self.gradle(*cmd)
-       system('gradle', '--daemon', cmd)
+      system('gradle', '--daemon', cmd)
     end
 
     def self.maven(*cmd)
-      system('mvn',cmd)
+      system('mvn', cmd)
     end
 
     def self.rubocop(*cmd)
