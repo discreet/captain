@@ -12,7 +12,7 @@ logger = Captain::Logger.new
 
 if changes.changed?
   Captain::Test.directory(changes.directory)
-  Captain::Test.rubocop
+  Captain::Test.rubocop('-C false')
   logger.info('Test Successful')
 else
   logger.info('No changes to test')
