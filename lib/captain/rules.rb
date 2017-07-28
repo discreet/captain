@@ -8,6 +8,12 @@ module Captain
       @errors = []
     end
 
+    def validate!
+      valid_title? && valid_second_line? && valid_body?
+    end
+
+    private
+
     def filtered_lines
       @filtered_lines ||= @lines.reject { |line| line =~ /\A\s*#/ }
     end
@@ -40,10 +46,6 @@ module Captain
       return true if body.all? { |line| line.length <= 72 && !line.nil? }
       @errors << 'Error Line Length: No line should be over 72 characters'
       false
-    end
-
-    def validate!
-      valid_title? && valid_second_line? && valid_body?
     end
   end
 end
