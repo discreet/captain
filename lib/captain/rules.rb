@@ -33,7 +33,7 @@ module Captain
     end
 
     def valid_second_line?
-      return true if second_line.start_with?("\n") && !second_line.nil?
+      return true if second_line.start_with?("\n")
       @errors << 'Error Blank Line: Second line should be empty'
       false
     end
