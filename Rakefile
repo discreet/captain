@@ -6,3 +6,9 @@ task :validate do
 
   sh 'rubocop -C false'
 end
+
+task :test do
+  Dir['test/captain/*'].each do |file|
+    sh "ruby #{file}" unless File.directory?(file)
+  end
+end
