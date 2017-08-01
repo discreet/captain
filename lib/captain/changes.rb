@@ -4,7 +4,7 @@ module Captain
 
     def initialize(dir = nil)
       @directory = dir.nil? ? choose_dir : dir
-      @directory = Dir.pwd if @directory == '.'
+      @directory = Dir.pwd if dir.eql?('.')
     end
 
     def changed?
